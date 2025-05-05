@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Kode untuk buku tamu
     const guestbookForm = document.getElementById('guestbook-form');
     const guestList = document.getElementById('guestbook-list');
     const searchInput = document.getElementById('search-guest');
@@ -7,10 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let guests = JSON.parse(localStorage.getItem('guests')) || [];
     
     function displayGuests(filter = '') {
-        // Kosongkan daftar tamu terlebih dahulu
         guestList.innerHTML = '';
-        
-        // Jika tidak ada tamu sama sekali
+
         if (guests.length === 0) {
             guestList.innerHTML = `
                 <div class="empty-state">
@@ -23,13 +22,11 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Filter tamu berdasarkan input pencarian
         let filteredGuests = guests;
         if (filter) {
             filteredGuests = [];
             for (let i = 0; i < guests.length; i++) {
                 const guest = guests[i];
-                // Cek apakah nama atau pesan mengandung teks filter (case insensitive)
                 if (guest.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1 || 
                     guest.message.toLowerCase().indexOf(filter.toLowerCase()) !== -1) {
                     filteredGuests.push(guest);
@@ -37,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Jika hasil filter kosong
         if (filteredGuests.length === 0) {
             guestList.innerHTML = `
                 <div class="empty-state">
@@ -49,8 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             return;
         }
-        
-        // Tampilkan tamu yang telah difilter
+
         for (let i = 0; i < filteredGuests.length; i++) {
             const guest = filteredGuests[i];
             
@@ -79,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Fungsi untuk mendapatkan index asli di array guests
     function getOriginalIndex(guest) {
         for (let i = 0; i < guests.length; i++) {
             if (guests[i].timestamp === guest.timestamp) {
@@ -89,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return -1;
     }
     
-    // Fungsi untuk memformat tanggal
     function formatDate(date) {
         const options = {
             day: 'numeric',
@@ -101,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return date.toLocaleString('id-ID', options);
     }
     
-    // Fungsi sederhana untuk escape HTML (mencegah XSS)
     function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
@@ -163,8 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
             searchInput.value = '';
         }
     });
-    
-    // Fungsi untuk menampilkan notifikasi toast
+
     function showToast(message) {
         const toast = document.createElement('div');
         toast.className = 'toast success';
@@ -185,27 +176,82 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 3000);
         }, 100);
     }  
+
+    // Kode untuk API Pexels (Gambar)
+    const API_KEY_PEXELS = 'qVUjdmMlBd8yhQcsuQM3b6VNKDNluck2kdkyhV5PcrbhMZGrvIoBgCen'; 
+    const query = 'pemandangan'; 
+    const perPage = 4;
+
+    fetch(`https://api.pexels.com/v1/search?query=${query}&per_page=${perPage}`, {
+      headers: {
+        Authorization: API_KEY_PEXELS
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById('image-containerr');
+      data.photos.forEach(photo => {
+        const img = document.createElement('img');
+        img.src = photo.src.medium;
+        img.alt = photo.photographer;
+        container.appendChild(img);
+      });
+    })
+    .catch(error => {
+      console.error('Gagal ambil gambar dari Pexels:', error);
+    });
 });
 
-const API_KEY = 'qVUjdmMlBd8yhQcsuQM3b6VNKDNluck2kdkyhV5PcrbhMZGrvIoBgCen'; 
-const query = 'pemandangan'; 
-const perPage = 4;
+const button = document.getElementById("start-story-btn");
+    const container = document.getElementById("story-container");
 
-fetch(`https://api.pexels.com/v1/search?query=${query}&per_page=${perPage}`, {
-  headers: {
-    Authorization: API_KEY
-  }
-})
-.then(response => response.json())
-.then(data => {
-  const container = document.getElementById('image-containerr');
-  data.photos.forEach(photo => {
-    const img = document.createElement('img');
-    img.src = photo.src.medium;
-    img.alt = photo.photographer;
-    container.appendChild(img);
-  });
-})
-.catch(error => {
-  console.error('Gagal ambil gambar dari Pexels:', error);
-});
+    button.addEventListener("click", function() {
+        // Show loading state
+        container.style.display = 'block';
+        container.innerHTML = '<p class="loading">Mengambil cerita dari OpenRouter...</p>';
+        
+        // Disable button during request
+        button.disabled = true;
+        button.textContent = "Memproses...";
+
+        fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer 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"
+            },
+            body: JSON.stringify({
+                model: "openai/gpt-3.5-turbo",
+                messages: [
+                    { 
+                        role: "user", 
+                        content: "Buatkan cerita pendek tentang petualangan seorang ksatria yang bertemu dengan naga. Cerita harus memiliki alur yang menarik dan ditulis dalam bahasa Indonesia yang baik." 
+                    }
+                ],
+                max_tokens: 1000
+            })
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            const reply = data.choices?.[0]?.message?.content;
+            if (reply) {
+                container.innerHTML = `<p>${reply}</p>`;
+            } else {
+                container.innerHTML = '<p class="error">Gagal mendapatkan cerita dari API. Format respons tidak sesuai.</p>';
+                console.error("Data tidak sesuai:", data);
+            }
+        })
+        .catch(err => {
+            container.innerHTML = '<p class="error">Terjadi kesalahan saat menghubungi API: ' + err.message + '</p>';
+            console.error("Error:", err);
+        })
+        .finally(() => {
+            button.disabled = false;
+            button.textContent = "Buat Cerita Lagi";
+        });
+    });
