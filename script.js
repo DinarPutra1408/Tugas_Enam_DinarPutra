@@ -218,7 +218,7 @@ const button = document.getElementById("start-story-btn");
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "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"
+                "Authorization": "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"
             },
             body: JSON.stringify({
                 model: "openai/gpt-3.5-turbo",
