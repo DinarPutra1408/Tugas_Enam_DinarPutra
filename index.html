@@ -47,37 +47,31 @@
         </div>
     </header>
 
-    <!-- Main/Hero Section -->
     <section id="home" class="main">
-        <div class="container">
-            <!-- Audio player untuk background music -->
-            <aside align="center">
-                <p> ---Musik biar asik---</p>
-                <audio controls loop>
-                    <source src="audioporto.mpeg" type="audio/mpeg">
-                </audio>
-            </aside>
-            
-            <!-- Grid layout untuk konten utama -->
-            <div class="main-grid">
-                <!-- Bagian teks introduksi -->
-                <div class="main-text">
-                    <h1>Halo, Saya <span>Dinar</span></h1>
-                    <h2>Web Developer Profesional</h2>
-                    <p>Pengembang web dari Surabaya dengan pengalaman lebih dari 1 tahun dalam pengembangan web, desain UI/UX, dan pemasaran digital. Mahir dalam Java, HTML, CSS, JavaScript, dan Figma.</p>
-                    <!-- Group button untuk CTA -->
-                    <div class="button-group">
-                        <a href="https://drive.google.com/file/d/1Xxvm76QwBLFILoTjrzXAhdBXsK0Zl63P/view?usp=drive_link" class="btn primary">Unduh CV</a>
-                        <a href="#projects" class="btn secondary">Lihat Proyek</a>
-                    </div>
-                </div>
-                <!-- Gambar profil -->
-                <div class="main-image">
-                    <img src="DinarProfile.png" alt="Foto Profil Dinar">
+    <div class="container">
+        <aside align="center">
+            <p>Musik biar asik</p>
+            <audio controls loop>
+                <source src="audioporto.mpeg" type="audio/mpeg">
+            </audio>
+        </aside>
+        
+        <div class="main-grid">
+            <div class="main-text">
+                <h1>Halo, Saya <span>Dinar</span></h1>
+                <h2>Web Developer Profesional</h2> <!-- Perhatikan di sini -->
+                <p>Pengembang web dari Surabaya dengan pengalaman lebih dari 1 tahun dalam pengembangan web, desain UI/UX, dan pemasaran digital. Mahir dalam Java, HTML, CSS, JavaScript, dan Figma.</p>
+                <div class="button-group">
+                    <a href="https://drive.google.com/file/d/1Xxvm76QwBLFILoTjrzXAhdBXsK0Zl63P/view?usp=drive_link" class="btn primary">Unduh CV</a>
+                    <a href="#projects" class="btn secondary">Lihat Proyek</a>
                 </div>
             </div>
+            <div class="main-image">
+                <img src="DinarProfile.png" alt="Foto Profil Dinar">
+            </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Projects Section -->
     <section id="projects" class="projects">
@@ -330,6 +324,24 @@
     <!-- Search Photo Section -->
     <h2>Gambar dari Pexels API</h2>
     <div class = "a" id="image-containerr"></div>
+
+    <section class="story-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Cerita dari OpenRouter AI API</h2>
+            </div>
+            
+            <div class="story-card">
+                <h3>Mulai Petualangan Anda</h3>
+                <p>Klik tombol di bawah untuk memulai cerita petualangan yang menakjubkan!</p>
+                <button class="btn primary" id="start-story-btn">Buat Cerita</button>
+                
+                <div id="story-container" class="story-box">
+                    <!-- Story content will appear here -->
+                </div>
+            </div>
+        </div>
+    </section>
 
     </section>
     <!-- Footer -->
